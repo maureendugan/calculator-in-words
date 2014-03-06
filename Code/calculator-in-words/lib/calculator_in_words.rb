@@ -1,20 +1,61 @@
 def calculator_in_words(phrase)
   split_phrase = phrase.split(' ')
-  numbers = phrase.scan(/(\d+)/)
-  result = 0
+  operators = {'plus' => "+", 'minus' => "-", 'multiplied' => "*", 'divided' => "/"}
+  problem_array = []
 
-
-  if split_phrase.index("plus") != nil
-    op_index = split_phrase.index("plus")
-    result = split_phrase[op_index-1].to_i + split_phrase[op_index+1].to_i 
-  elsif split_phrase.index("minus") != nil
-    op_index = split_phrase.index("minus") 
-    result = split_phrase[op_index-1].to_i - split_phrase[op_index+1].to_i
+  split_phrase.each do |word|
+    if operators.has_key?(word)
+      problem_array << operators[word]
+    elsif (word =~ /(\d+)/) != nil
+      problem_array << word.to_f
+    end
   end
-  puts result
-  return result
 
+  return calculate(problem_array)
 end
 
-calculator_in_words("What is 55 plus 3?")
-calculator_in_words("What is 55 minus 3?")
+
+def calculate(problem_array)
+
+  while problem_array.length > 1 do
+    if problem_array.index('/') != nil
+      i = problem_array.index('/')
+      problem_array[i-1] = sub_calculate(problem_array[i-1..i+1])
+      problem_array.delete_at(i+1)
+      problem_array.delete_at(i)
+    elsif problem_array.index('*') != nil
+      i = problem_array.index('*')
+      problem_array[i-1] = sub_calculate(problem_array[i-1..i+1])
+      problem_array.delete_at(i+1)
+      problem_array.delete_at(i)
+    elsif problem_array.index('+') != nil
+      i = problem_array.index('+')
+      problem_array[i-1] = sub_calculate(problem_array[i-1..i+1])
+      problem_array.delete_at(i+1)
+      problem_array.delete_at(i)
+    elsif problem_array.index('-') != nil
+      i = problem_array.index('-')
+      problem_array[i-1] = sub_calculate(problem_array[i-1..i+1])
+      problem_array.delete_at(i+1)
+      problem_array.delete_at(i)
+    end
+  end
+
+  return problem_array[0]
+end
+
+
+def sub_calculate(problem_array)
+
+    if problem_array[1] == "/"
+      result = problem_array[0] / problem_array[2]
+    elsif problem_array[1] == "*"
+      result = problem_array[0] * problem_array[2]
+    elsif problem_array[1] == "+"
+      result = problem_array[0] + problem_array[2]
+    elsif problem_array[1] == "-"
+      result = problem_array[0] - problem_array[2]
+    end
+
+  return result
+end
