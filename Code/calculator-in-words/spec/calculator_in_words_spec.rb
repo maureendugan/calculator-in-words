@@ -27,4 +27,7 @@ describe('calculator_in_words') do
   it('can handle an expression with two divide statements') do
     calculator_in_words("What is 3 divided by 1 plus 9 divided by 3 plus 2").should(eq(8))
   end
+  it('returns a number to a power correctly') do
+    calculator_in_words('What is 3 to the 3rd power').should(eq(27))
+  end
 end
